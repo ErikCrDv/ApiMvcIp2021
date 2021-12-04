@@ -28,5 +28,6 @@ namespace ApiMvcIp2021.Data.ApplicationDbContext
 		//public DbSet<Poliza> Polizas { get; set; }
 		//public DbSet<PolizaFederal> PolizasFederal { get; set; }
 		//public DbSet<Verificacion> Verificaciones { get; set; }
+
 	}
 }

@@ -6,10 +6,10 @@ namespace ApiMvcIp2021.Models.Models
 {
 	public class Usuario
 	{
-		public string UserId { get; set; }
-		public string UserName { get; set; }
+		public string UsuarioId { get; set; }
+		public string NombreUsuario { get; set; }
 		public string Password { get; set; }
-		public string FullName { get; set; }
+		public string NombreCompleto { get; set; }
 
 		public bool grantCliente { get; set; }
 		public bool grantPago { get; set; }
