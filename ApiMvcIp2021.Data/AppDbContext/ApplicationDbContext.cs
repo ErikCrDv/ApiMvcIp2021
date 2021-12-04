@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ApiMvcIp2021.Data.ApplicationDbContext
+namespace ApiMvcIp2021.Data.AppDbContext
 {
 	public class ApplicationDbContext : DbContext
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-		: base(options)
+				: base(options)
 		{
 		}
 
