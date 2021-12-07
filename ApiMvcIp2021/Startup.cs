@@ -1,4 +1,6 @@
 using ApiMvcIp2021.Data.AppDbContext;
+using ApiMvcIp2021.Data.Data.Interfaces;
+using ApiMvcIp2021.Data.Data.Repositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +34,8 @@ namespace ApiMvcIp2021
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
 			);
+
+			services.AddScoped<IUnidadTrabajo, UnidadTrabajo>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
