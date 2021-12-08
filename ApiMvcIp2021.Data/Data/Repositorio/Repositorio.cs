@@ -3,6 +3,7 @@ using ApiMvcIp2021.Data.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ApiMvcIp2021.Data.Data.Repositorio
@@ -21,6 +22,16 @@ namespace ApiMvcIp2021.Data.Data.Repositorio
 		public void Agregar(T entidad)
 		{
 			_dbSet.Add(entidad);
+		}
+
+		public T ObtenerById(string Id)
+		{
+			return _dbSet.Find(Id);
+		}
+
+		public IEnumerable<T> ObtenerTodos()
+		{
+			return _dbSet.ToList();
 		}
 	}
 }

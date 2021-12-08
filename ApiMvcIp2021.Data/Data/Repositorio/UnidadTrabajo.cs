@@ -11,11 +11,14 @@ namespace ApiMvcIp2021.Data.Data.Repositorio
 
 		private readonly ApplicationDbContext _applicationDbContext;
 		public IUsuarioRepositorio Usuario { get; private set; }
-		
+		public IClienteRepositorio Cliente { get; private set; }
+
+
 		public UnidadTrabajo(ApplicationDbContext applicationDbContext)
 		{
 			_applicationDbContext = applicationDbContext;
 			Usuario = new UsuarioRepositorio(_applicationDbContext);
+			Cliente = new ClienteRepositorio(_applicationDbContext);
 		}
 
 		public void Guardar()

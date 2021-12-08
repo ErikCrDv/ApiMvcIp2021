@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ApiMvcIp2021.Data.Data.Interfaces
 {
-	public interface IUsuarioRepositorio : IRepositorio<Usuario>
+	public interface IClienteRepositorio : IRepositorio<Cliente>
 	{
-		void Actualizar(string id, Usuario usuario);
+		void Actualizar(Cliente cliente);
 	}
 }

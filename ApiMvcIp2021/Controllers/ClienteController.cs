@@ -12,41 +12,42 @@ namespace ApiMvcIp2021.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class UsuarioController : ControllerBase
+	public class ClienteController : ControllerBase
 	{
 		private readonly IUnidadTrabajo _unidadTrabajo;
 
-		public UsuarioController(IUnidadTrabajo unidadTrabajo)
+		public ClienteController(IUnidadTrabajo unidadTrabajo)
 		{
 			_unidadTrabajo = unidadTrabajo;
 		}
-
-
 		[HttpGet]
-		public IEnumerable<Usuario> Get()
+		public IEnumerable<Cliente> Get()
 		{
-			return _unidadTrabajo.Usuario.ObtenerTodos();
+			return _unidadTrabajo.Cliente.ObtenerTodos();
 		}
 
 		[HttpGet("{id}")]
-		public Usuario Get(string id)
+		public Cliente Get(string id)
 		{
-			return _unidadTrabajo.Usuario.ObtenerById(id);
+			return _unidadTrabajo.Cliente.ObtenerById(id);
 		}
+
 
 		[HttpPost]
-		public void Post(Usuario usuario)
+		public void Post(Cliente cliente)
 		{
-			_unidadTrabajo.Usuario.Agregar(usuario);
+			_unidadTrabajo.Cliente.Agregar(cliente);
+			_unidadTrabajo.Guardar();
+
+		}
+
+		[HttpPut]
+		public void Put(Cliente cliente)
+		{
+			_unidadTrabajo.Cliente.Actualizar(cliente);
 			_unidadTrabajo.Guardar();
 		}
 
-		[HttpPut("{id}")]
-		public void Put(string id, Usuario usuario)
-		{
-			_unidadTrabajo.Usuario.Actualizar(id, usuario);
-			_unidadTrabajo.Guardar();
-		}
 
 		[HttpDelete("{id}")]
 		public void Delete(int id)
