@@ -138,8 +138,8 @@ namespace ApiMvcIp2021.Data.Data.Repositorio
 			string filtro = string.IsNullOrEmpty(listadoRequest.filter) ? "" : listadoRequest.filter;
 
 			var query = _applicationDbContext.Usuarios
-							.Where(o => o.NombreUsuario.Contains(filtro)
-							|| o.Contrasena.ToString().Contains(filtro))
+							.Where(o => o.NombreUsuario.Contains(filtro))
+							// || o.Contrasena.ToString().Contains(filtro))
 							.Select(or => new UsuarioViewModel
 							{
 								UsuarioId = or.UsuarioId,

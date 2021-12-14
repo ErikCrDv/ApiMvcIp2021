@@ -1,5 +1,7 @@
 ﻿using ApiMvcIp2021.Data.Data.Interfaces;
 using ApiMvcIp2021.Models.Models;
+using ApiMvcIp2021.Models.ViewModels;
+using ApiMvcIp2021.Utilidades.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
