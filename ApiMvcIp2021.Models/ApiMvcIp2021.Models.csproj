@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ApiMvcIp2021.Utilidades\ApiMvcIp2021.Utilidades.csproj" />
+  </ItemGroup>
+
 </Project>

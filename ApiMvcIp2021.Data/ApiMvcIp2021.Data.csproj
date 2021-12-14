@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiMvcIp2021.Models\ApiMvcIp2021.Models.csproj" />
+    <ProjectReference Include="..\ApiMvcIp2021.Utilidades\ApiMvcIp2021.Utilidades.csproj" />
   </ItemGroup>
 
 </Project>

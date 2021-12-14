@@ -20,38 +20,6 @@ namespace ApiMvcIp2021.Controllers
 		{
 			_unidadTrabajo = unidadTrabajo;
 		}
-		[HttpGet]
-		public IEnumerable<Cliente> Get()
-		{
-			return _unidadTrabajo.Cliente.ObtenerTodos();
-		}
 
-		[HttpGet("{id}")]
-		public Cliente Get(string id)
-		{
-			return _unidadTrabajo.Cliente.ObtenerById(id);
-		}
-
-
-		[HttpPost]
-		public void Post(Cliente cliente)
-		{
-			_unidadTrabajo.Cliente.Agregar(cliente);
-			_unidadTrabajo.Guardar();
-
-		}
-
-		[HttpPut]
-		public void Put(Cliente cliente)
-		{
-			_unidadTrabajo.Cliente.Actualizar(cliente);
-			_unidadTrabajo.Guardar();
-		}
-
-
-		[HttpDelete("{id}")]
-		public void Delete(int id)
-		{
-		}
 	}
 }
