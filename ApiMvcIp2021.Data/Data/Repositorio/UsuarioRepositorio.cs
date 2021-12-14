@@ -3,6 +3,7 @@ using ApiMvcIp2021.Data.Data.Interfaces;
 using ApiMvcIp2021.Models.Enum;
 using ApiMvcIp2021.Models.Models;
 using ApiMvcIp2021.Models.ViewModels;
+using ApiMvcIp2021.Utilidades.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,57 +23,184 @@ namespace ApiMvcIp2021.Data.Data.Repositorio
 
 		public void Actualizar(UsuarioViewModel usuarioViewModel)
 		{
-			throw new NotImplementedException();
+			if (ExisteCorreo(usuarioViewModel.Correo, usuarioViewModel.UsuarioId))
+			{
+				throw new UsuarioException("Ya existe un usuario con el correo ingresado en la base de datos.");
+			}
+
+			if (ExisteUsuario(usuarioViewModel.NombreUsuario, usuarioViewModel.UsuarioId))
+			{
+				throw new UsuarioException("Ya existe el usuario en la base de datos.");
+			}
+			Usuario usuario = _applicationDbContext.Usuarios.Find(usuarioViewModel.UsuarioId);
+			if (usuario == null)
+			{
+				throw new UsuarioException("No se encontro el usuario.");
+			}
+
+			usuario.Correo = usuarioViewModel.Correo;
+			usuario.NombreUsuario = usuarioViewModel.NombreUsuario;
+
+			_applicationDbContext.Entry(usuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+			_applicationDbContext.SaveChanges();
 		}
 
 		public void ActualizarContrasena(string usuarioId, string contrasena)
 		{
-			throw new NotImplementedException();
+			Usuario usuario = _applicationDbContext.Usuarios.Find(usuarioId);
+			if (usuario == null)
+			{
+				throw new UsuarioException("No se encontro el usuario.");
+			}
+
+			usuario.Contrasena = Utilidades.Utilidades.Utilidades.EncryptString(contrasena);
+
+			_applicationDbContext.Entry(usuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+			_applicationDbContext.SaveChanges();
 		}
 
 		public void CambiarEstatus(string usuarioId, EstadoUsuarioEnum estatusUsuariosEnum)
 		{
-			throw new NotImplementedException();
+			Usuario usuario = _applicationDbContext.Usuarios.Find(usuarioId);
+			if (usuario == null)
+			{
+				throw new UsuarioException("No se encontro el usuario.");
+			}
+
+			usuario.Estatus = estatusUsuariosEnum;
+
+			_applicationDbContext.Entry(usuario).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+			_applicationDbContext.SaveChanges();
 		}
 
 		public void Crear(UsuarioViewModel usuarioViewModel)
 		{
-			throw new NotImplementedException();
+			if (ExisteCorreo(usuarioViewModel.Correo))
+			{
+				throw new UsuarioException("Ya existe un usuario con el correo ingresado en la base de datos.");
+			}
+
+			if (ExisteUsuario(usuarioViewModel.NombreUsuario))
+			{
+				throw new UsuarioException("Ya existe el usuario en la base de datos.");
+			}
+
+			Usuario usuario = new Usuario()
+			{
+				Contrasena = Utilidades.Utilidades.Utilidades.EncryptString(usuarioViewModel.Contrasena),
+				Correo = usuarioViewModel.Correo,
+				Estatus = EstadoUsuarioEnum.ACTIVO,
+				NombreUsuario = usuarioViewModel.NombreUsuario
+			};
+
+			_applicationDbContext.Add(usuario);
+			_applicationDbContext.SaveChanges();
 		}
 
 		public bool ExisteCorreo(string correo)
 		{
-			throw new NotImplementedException();
+			if (_applicationDbContext.Usuarios.Where(u => u.Correo.Equals(correo)).Count() > 0)
+			{
+				return true;
+			};
+			return false;
 		}
 
 		public bool ExisteCorreo(string correo, string usuarioId)
 		{
-			throw new NotImplementedException();
+			if (_applicationDbContext.Usuarios.Where(u => u.Correo.Equals(correo) && !u.UsuarioId.Equals(usuarioId)).Count() > 0)
+			{
+				return true;
+			};
+			return false;
 		}
 
 		public bool ExisteUsuario(string usuario)
 		{
-			throw new NotImplementedException();
+			if (_applicationDbContext.Usuarios.Where(u => u.NombreUsuario.Equals(usuario)).Count() > 0)
+			{
+				return true;
+			};
+			return false;
 		}
 
 		public bool ExisteUsuario(string usuario, string usuarioId)
 		{
-			throw new NotImplementedException();
+			if (_applicationDbContext.Usuarios.Where(u => u.NombreUsuario.Equals(usuario) && !u.UsuarioId.Equals(usuarioId)).Count() > 0)
+			{
+				return true;
+			};
+			return false;
 		}
 
 		public ListadoPaginadoViewModel<UsuarioViewModel> Listado(ListadoRequest listadoRequest)
 		{
-			throw new NotImplementedException();
+			string filtro = string.IsNullOrEmpty(listadoRequest.filter) ? "" : listadoRequest.filter;
+
+			var query = _applicationDbContext.Usuarios
+							.Where(o => o.NombreUsuario.Contains(filtro)
+							|| o.Contrasena.ToString().Contains(filtro))
+							.Select(or => new UsuarioViewModel
+							{
+								UsuarioId = or.UsuarioId,
+								NombreUsuario = or.NombreUsuario,
+								Correo = or.Correo,
+								Estatus = or.Estatus,
+								UltimoInicioSesion = or.UltimoInicioSesion
+							});
+
+			Func<UsuarioViewModel, Object> campoOrdenamiento = campo => campo.NombreUsuario;
+			switch (listadoRequest.sortBy)
+			{
+				case "nombreUsuario":
+					campoOrdenamiento = campo => campo.NombreUsuario;
+					break;
+				case "correo":
+					campoOrdenamiento = campo => campo.Correo;
+					break;
+				default:
+					campoOrdenamiento = campo => campo.NombreUsuario;
+					break;
+			}
+
+			PaginacionRepositorio<UsuarioViewModel> paginacionRepository = new PaginacionRepositorio<UsuarioViewModel>();
+			ListadoPaginadoViewModel<UsuarioViewModel> listadoUsuarios = paginacionRepository.ejecutarConsultaPaginada(query, listadoRequest, campoOrdenamiento);
+			return listadoUsuarios;
 		}
 
 		public UsuarioViewModel ObtenerPorCorreo(string correo)
 		{
-			throw new NotImplementedException();
+			Usuario usuario = _applicationDbContext.Usuarios.Where(u => u.Correo.Equals(correo)).FirstOrDefault();
+			if (usuario == null)
+			{
+				throw new UsuarioException("No se econtro del usuario");
+			}
+			return toUsuarioViewModel(usuario);
 		}
 
 		public UsuarioViewModel ObtenerPorId(string idUsuario)
 		{
-			throw new NotImplementedException();
+			Usuario usuario = _applicationDbContext.Usuarios.Find(idUsuario);
+			if (usuario == null)
+			{
+				throw new UsuarioException("No se econtro del usuario");
+			}
+			return toUsuarioViewModel(usuario);
+		}
+
+		private UsuarioViewModel toUsuarioViewModel(Usuario usuario)
+		{
+
+			UsuarioViewModel usuarioViewModel = new UsuarioViewModel()
+			{
+				Correo = usuario.Correo,
+				Estatus = usuario.Estatus,
+				NombreUsuario = usuario.NombreUsuario,
+				UltimoInicioSesion = usuario.UltimoInicioSesion,
+				UsuarioId = usuario.UsuarioId
+
+			};
+			return usuarioViewModel;
 		}
 
 		//public void Actualizar(string id, Usuario usuario)
