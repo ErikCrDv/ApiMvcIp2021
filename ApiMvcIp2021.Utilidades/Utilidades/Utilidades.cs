@@ -11,39 +11,6 @@ namespace ApiMvcIp2021.Utilidades.Utilidades
 {
 	public static class Utilidades
 	{
-
-        public static string EncryptString(string text, string keyString = "R789C8DF318CD2136087B522E695E9F1")
-        {
-            var key = Encoding.UTF8.GetBytes(keyString);
-
-            using (var aesAlg = Aes.Create())
-            {
-                using (var encryptor = aesAlg.CreateEncryptor(key, aesAlg.IV))
-                {
-                    using (var msEncrypt = new MemoryStream())
-                    {
-                        using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                        using (var swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            swEncrypt.Write(text);
-                        }
-
-                        var iv = aesAlg.IV;
-
-                        var decryptedContent = msEncrypt.ToArray();
-
-                        var result = new byte[iv.Length + decryptedContent.Length];
-
-                        Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
-                        Buffer.BlockCopy(decryptedContent, 0, result, iv.Length, decryptedContent.Length);
-
-                        return Convert.ToBase64String(result);
-                    }
-                }
-            }
-        }
-
-
         public static string GetDescriptionEnum<T>(this T e) where T : IConvertible
         {
             if (e is Enum)
@@ -69,5 +36,78 @@ namespace ApiMvcIp2021.Utilidades.Utilidades
             }
             return null;
         }
+
+
+        static string aes_key = "AXe8YwuIn1zxt3FPWTZFlAa14EHdPAdN9FaZ9RQWihc=";
+        static string aes_iv = "bsxnWolsAyO7kCfWuyrnqg==";
+
+        public static string EncryptString(string text)
+        {
+            return EncryptAES(text);
+        }
+        public static string DecryptString(string cipherText)
+        {
+            return DecryptAES(cipherText);
+        }
+
+
+        public static string EncryptAES(string plainText)
+        {
+            byte[] encrypted;
+
+            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+            {
+                aes.Key = Convert.FromBase64String(aes_key);
+                aes.IV = Convert.FromBase64String(aes_iv);
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.PKCS7;
+
+                ICryptoTransform enc = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, enc, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter sw = new StreamWriter(cs))
+                        {
+                            sw.Write(plainText);
+                        }
+
+                        encrypted = ms.ToArray();
+                    }
+                }
+            }
+            return Convert.ToBase64String(encrypted);
+        }
+
+        public static string DecryptAES(string encryptedText)
+        {
+            string decrypted = null;
+            byte[] cipher = Convert.FromBase64String(encryptedText);
+
+            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+            {
+                aes.Key = Convert.FromBase64String(aes_key);
+                aes.IV = Convert.FromBase64String(aes_iv);
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.PKCS7;
+
+                ICryptoTransform dec = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using (MemoryStream ms = new MemoryStream(cipher))
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, dec, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader sr = new StreamReader(cs))
+                        {
+                            decrypted = sr.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return decrypted;
+        }
+
+
     }
 }

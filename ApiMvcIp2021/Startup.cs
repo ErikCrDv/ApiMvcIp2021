@@ -1,6 +1,7 @@
 using ApiMvcIp2021.Data.AppDbContext;
 using ApiMvcIp2021.Data.Data.Interfaces;
 using ApiMvcIp2021.Data.Data.Repositorio;
+using ApiMvcIp2021.Data.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -77,6 +78,7 @@ namespace ApiMvcIp2021
 			});
 
 			services.AddScoped<IUnidadTrabajo, UnidadTrabajo>();
+			services.AddScoped<ISesionService, SesionService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

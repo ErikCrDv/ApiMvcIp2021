@@ -25,18 +25,18 @@ namespace ApiMvcIp2021.Data.Services.Auth
 
 		public DatosSesion IniciarSesion(IniciarSesionRequest iniciarSesionRequest)
 		{
-			string clave = Utilidades.Utilidades.Utilidades.EncryptString(iniciarSesionRequest.Clave);
+			// string clave = Utilidades.Utilidades.Utilidades.EncryptString(iniciarSesionRequest.Clave);
 			Usuario usuario = _applicationDbContext.Usuarios
-				.Where(u => u.NombreUsuario.Equals(iniciarSesionRequest.Usuario) && u.Contrasena.Equals(clave))
+				.Where(u => u.NombreUsuario.Equals(iniciarSesionRequest.Usuario) /*&& u.Contrasena.Equals(clave)*/)
 				.FirstOrDefault();
-			
-			if(usuario == null)
+
+			if (usuario != null && Utilidades.Utilidades.Utilidades.DecryptString((usuario.Contrasena)) == iniciarSesionRequest.Clave)
 			{
-				throw new SesionException("Credenciales Incorrectas");
+				return ObtenerDatosSesion(usuario);
 			}
 			else
 			{
-				return ObtenerDatosSesion(usuario);
+				throw new SesionException("Credenciales Incorrectas");
 			}
 
 		}
