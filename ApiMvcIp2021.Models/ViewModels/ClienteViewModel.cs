@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace ApiMvcIp2021.Models.Models
+namespace ApiMvcIp2021.Models.ViewModels
 {
-	public class Cliente
+	public class ClienteViewModel
 	{
-		public Cliente()
-		{
-			ClienteId = Guid.NewGuid().ToString();
-		}
-
 		public string ClienteId { get; set; }
+
+		[Required(ErrorMessage = "El nombre es requerido.")]
 		public string Nombre { get; set; }
+
+		[Required(ErrorMessage = "El RFC es requerido.")]
 		public string RFC { get; set; }
+
 		public string CP { get; set; }
 		public string Estado { get; set; }
 		public string Municipio { get; set; }

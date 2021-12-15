@@ -35,14 +35,14 @@ namespace ApiMvcIp2021
 		{
 			byte[] securityKey = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("SecretKey"));
 			int minutosTiempoSesion = Configuration.GetValue<int>("MinutosTiempoSesion");
-			string assemblyName = typeof(ApplicationDbContext).Namespace;
+			//string assemblyName = typeof(ApplicationDbContext).Namespace;
 
 			services.AddControllers()
 					.AddNewtonsoftJson();
 
 			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), optionsBuilder => 
-					optionsBuilder.MigrationsAssembly(assemblyName)));
+				options.UseSqlServer( Configuration.GetConnectionString("DefaultConnection") ));
+				// , optionsBuilder => optionsBuilder.MigrationsAssembly(assemblyName)));
 
 			services.AddCors(options =>
 			{

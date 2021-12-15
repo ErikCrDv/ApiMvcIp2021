@@ -2,6 +2,7 @@
 using ApiMvcIp2021.Models.Models;
 using ApiMvcIp2021.Models.ViewModels;
 using ApiMvcIp2021.Utilidades.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ApiMvcIp2021.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class UsuarioController : ControllerBase
