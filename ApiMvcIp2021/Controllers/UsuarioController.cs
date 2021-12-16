@@ -1,4 +1,5 @@
 ﻿using ApiMvcIp2021.Data.Data.Interfaces;
+using ApiMvcIp2021.Models.Enum;
 using ApiMvcIp2021.Models.Models;
 using ApiMvcIp2021.Models.ViewModels;
 using ApiMvcIp2021.Utilidades.Exceptions;
@@ -91,6 +92,21 @@ namespace ApiMvcIp2021.Controllers
 			try
 			{
 				_unidadTrabajo.Usuario.ActualizarContrasena(usuarioId, contrasena);
+				return new OkResult();
+			}
+			catch (UsuarioException ex)
+			{
+				return new BadRequestObjectResult(ex.Message);
+			}
+		}
+
+		[HttpPut]
+		[Route("actualizar-estado")]
+		public ActionResult CambiarEstatus(string usuarioId, EstadoUsuarioEnum estado)
+		{
+			try
+			{
+				_unidadTrabajo.Usuario.CambiarEstatus(usuarioId, estado);
 				return new OkResult();
 			}
 			catch (UsuarioException ex)

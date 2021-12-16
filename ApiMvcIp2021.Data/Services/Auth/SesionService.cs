@@ -70,6 +70,10 @@ namespace ApiMvcIp2021.Data.Services.Auth
 				Nombre = usuario.NombreUsuario,
 				UltimoInicioSesion = usuario.UltimoInicioSesion.ToLongDateString()
 			};
+
+			usuario.UltimoInicioSesion = DateTime.Now;
+			_applicationDbContext.SaveChanges();
+
 			return datosSesionViewModel;
 		}
 	}
